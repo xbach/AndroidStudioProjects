@@ -1,6 +1,8 @@
 package cz.xbach.a.geoquiz;
 
+
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -15,9 +17,10 @@ public class CheatActivity extends ActionBarActivity {
 
     // private static final String TAG = "CheatActivity";
     private boolean mAnswerIsTrue;
-    private int mAnswerShown;
+    private boolean mAnswerShown;
 
     private TextView mAnswerTextView;
+    private TextView mAPIVersionTextView;
     private Button mShowAnswer;
 
     public static final String EXTRA_ANSWER_IS_TRUE = "cz.xbach.a.geoquiz.answer_is_true";
@@ -30,9 +33,10 @@ public class CheatActivity extends ActionBarActivity {
         Intent data = new Intent();
         data.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
         setResult(RESULT_OK, data);
-        if (isAnswerShown) {mAnswerShown = 1;}
+        mAnswerShown = true;
 
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +44,11 @@ public class CheatActivity extends ActionBarActivity {
         setContentView(R.layout.activity_cheat);
         // Log.d(TAG, "CheatActivity started");
 
-        setAnswerShownResult(false);
+        mAnswerShown = false;
 
         if (savedInstanceState != null) {
-            int userCheated;
-            userCheated = savedInstanceState.getInt(KEY_CHEAT, 0);
-            if (userCheated == 1) {
+            mAnswerShown = savedInstanceState.getBoolean(KEY_CHEAT, false);
+            if (mAnswerShown) {
                 setAnswerShownResult(true);
             }
         }
@@ -70,12 +73,15 @@ public class CheatActivity extends ActionBarActivity {
             }
         });
 
+        mAPIVersionTextView = (TextView)findViewById(R.id.APIVersionTextView);
+        mAPIVersionTextView.setText(Build.VERSION.RELEASE);
+
     }
 
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
 
-        savedInstanceState.putInt(KEY_CHEAT, mAnswerShown);
+        savedInstanceState.putBoolean(KEY_CHEAT, mAnswerShown);
     }
 
 }

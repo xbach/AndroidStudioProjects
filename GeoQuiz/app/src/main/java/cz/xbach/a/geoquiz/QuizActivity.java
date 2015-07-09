@@ -1,8 +1,8 @@
 package cz.xbach.a.geoquiz;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
-// import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,7 +66,7 @@ public class QuizActivity extends ActionBarActivity {
 
         // Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
         // Replacing the Toast with TextView
-        mAnswerTextView = (TextView)findViewById(R.id.answer_text_view);
+        // mAnswerTextView = (TextView)findViewById(R.id.answer_text_view);
         mAnswerTextView.setText(messageResId);
     }
 
@@ -80,12 +80,13 @@ public class QuizActivity extends ActionBarActivity {
 
     private void decreaseQuestion() {
         if (mCurrentIndex == 0) {
-            mCurrentIndex = 4 % mQuestionBank.length;
+            mCurrentIndex = 5 % mQuestionBank.length;
         } else {
             mCurrentIndex = (mCurrentIndex - 1) % mQuestionBank.length;
         }
 
         mAnswerTextView.setText("");
+
         updateQuestion();
         mIsCheater = false;
     }
@@ -95,6 +96,9 @@ public class QuizActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        // ActionBar actionBar = getActionBar();
+        // actionBar.setSubtitle("");
+
         mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,14 +107,19 @@ public class QuizActivity extends ActionBarActivity {
             }
         });
 
+        mAnswerTextView = (TextView)findViewById(R.id.answer_text_view);
+
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
 
-            int checkCheatSaved;
-            checkCheatSaved = savedInstanceState.getInt(KEY_CHEAT, 0);
-            if (checkCheatSaved == 1) {
-                mIsCheater = true;
-            }
+            // int checkCheatSaved;
+            // checkCheatSaved = savedInstanceState.getInt(KEY_CHEAT, 0);
+            // if (checkCheatSaved == 1) {
+            // mIsCheater = true;
+            // } else {
+            //    mIsCheater = false;
+
+            mIsCheater = savedInstanceState.getBoolean(KEY_CHEAT, false);
         }
 
 
@@ -206,13 +215,13 @@ public class QuizActivity extends ActionBarActivity {
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
 
         // Saving Cheater across Instances
-        int CheaterInstanceState;
-        if (mIsCheater) {
-            CheaterInstanceState = 1;
+        // int CheaterInstanceState;
+        // if (mIsCheater) {
+        //    CheaterInstanceState = 1;
             // Log.d(TAG, "INSTANCE:" + CheaterInstanceState);
-            }
-        else {CheaterInstanceState = 0;}
+        //    }
+        // else {CheaterInstanceState = 0;}
 
-        savedInstanceState.putInt(KEY_CHEAT, CheaterInstanceState);
+        savedInstanceState.putBoolean(KEY_CHEAT, mIsCheater);
     }
 }
